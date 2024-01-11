@@ -1,5 +1,6 @@
 import requests
 from os import path, mkdir, walk
+from tqdm import tqdm
 
 
 NO_MATCHES_FOUND = 9999999
@@ -173,7 +174,7 @@ def update_urls_in_project(project_path: str) -> None:
     """
     ignored_dirs = { '.git', 'node_modules', '__pycache__' }
 
-    for root, dirs, files in walk(project_path):
+    for root, dirs, files in tqdm(walk(project_path)):
         for file in files:
             file_path: str = path.join(root, file)
 
@@ -181,7 +182,7 @@ def update_urls_in_project(project_path: str) -> None:
             if True in [dir in file_path for dir in ignored_dirs]: continue
 
             # if the file we're modifying is a markdown file, then we should include /public/ to the new paths (TODO: check if necessary)
-            update_urls_in_file(file_path, project_path, file_path.endswith('.md'))
+            update_urls_in_file(file_path, root, file_path.endswith('.md'))
 
 
-update_urls_in_project(r'E:\Projects\portfolio-site')
+update_urls_in_project(r'E:\Projects')
